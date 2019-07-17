@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
-
+using System.Diagnostics;
 
 namespace ĐoAn_1
 {
@@ -701,7 +701,7 @@ namespace ĐoAn_1
                 {
                     ListViewItem curr = listView1.FocusedItem;
                     e.CancelEdit = true;
-                    string s = pnfd + curr.Text;
+                    string s = pnfd + "/" + curr.Text;
                     listView1.FocusedItem.Text = curr.Text.ToString();
                     DirectoryInfo m = Directory.CreateDirectory(s);
                     string[] l = { m.Name, "File Folder", "", m.CreationTime.ToLongDateString(), m.FullName, m.Parent.FullName };
@@ -724,7 +724,7 @@ namespace ĐoAn_1
                     if (fi.Exists)
                     {
 
-                        string dest = pnfd + e.Label;
+                        string dest = pnfd + "/" + e.Label;
                         FileInfo t = new FileInfo(dest);
                         if (t.Exists)
                         {
@@ -765,7 +765,7 @@ namespace ĐoAn_1
                     {
 
 
-                        string dest = pnfd + e.Label;
+                        string dest = pnfd + "/" + e.Label;
                         DirectoryInfo t = new DirectoryInfo(dest);
                         if (t.Exists)
                         {
@@ -806,7 +806,7 @@ namespace ĐoAn_1
                 {
 
                     ListViewItem curr = listView1.FocusedItem;
-                    string currpath = pnfd + e.Label;
+                    string currpath = pnfd + "/" + e.Label;
                     string dest = pnfd + e.Label;
                     DirectoryInfo t = new DirectoryInfo(dest);
                     if (t.Exists && e.Label != "")
@@ -823,7 +823,7 @@ namespace ĐoAn_1
                         {
 
                             e.CancelEdit = true;
-                            string s = pnfd + curr.Text;
+                            string s = pnfd + "/" + curr.Text;
                             listView1.FocusedItem.Text = curr.Text.ToString();
                             DirectoryInfo m = Directory.CreateDirectory(s);
                             string[] l = { m.Name, "File Folder", "", m.CreationTime.ToLongDateString(), m.FullName, m.Parent.FullName };
@@ -835,7 +835,7 @@ namespace ĐoAn_1
                         else
                         {
                             e.CancelEdit = true;
-                            string s = pnfd + e.Label;
+                            string s = pnfd + "/" + e.Label;
                             listView1.FocusedItem.Text = e.Label;
                             DirectoryInfo m = Directory.CreateDirectory(s);
                             string[] l = { m.Name, "File Folder", "", m.CreationTime.ToLongDateString(), m.FullName, m.Parent.FullName };
@@ -1037,128 +1037,48 @@ namespace ĐoAn_1
         private void ListView2_AfterLabelEdit(object sender, LabelEditEventArgs e)
         {
 
+
+            if (e.Label == null)
             {
-                if (e.Label == null)
+                flagRename = false;
+                if (flagNewFolder)
                 {
-                    flagRename = false;
-                    if (flagNewFolder)
-                    {
-                        ListViewItem curr = listView2.FocusedItem;
-                        e.CancelEdit = true;
-                        string s = pnfd + curr.Text;
-                        listView2.FocusedItem.Text = curr.Text.ToString();
-                        DirectoryInfo m = Directory.CreateDirectory(s);
-                        string[] l = { m.Name, "File Folder", "", m.CreationTime.ToLongDateString(), m.FullName, m.Parent.FullName };
-                        listView2.FocusedItem = new ListViewItem(l);
-                        listView2.FocusedItem.Tag = s;
+                    ListViewItem curr = listView2.FocusedItem;
+                    e.CancelEdit = true;
+                    string s = pnfd + curr.Text;
+                    listView2.FocusedItem.Text = curr.Text.ToString();
+                    DirectoryInfo m = Directory.CreateDirectory(s);
+                    string[] l = { m.Name, "File Folder", "", m.CreationTime.ToLongDateString(), m.FullName, m.Parent.FullName };
+                    listView2.FocusedItem = new ListViewItem(l);
+                    listView2.FocusedItem.Tag = s;
 
-                    }
-
-                    flagNewFolder = false;
-                    return;
                 }
-                else
+
+                flagNewFolder = false;
+                return;
+            }
+            else
+            {
+                if (flagRename)
                 {
-                    if (flagRename)
+
+                    ListViewItem curr = listView2.SelectedItems[0];
+                    string currpath = curr.SubItems[4].Text;
+                    FileInfo fi = new FileInfo(currpath);
+                    if (fi.Exists)
                     {
 
-                        ListViewItem curr = listView2.SelectedItems[0];
-                        string currpath = curr.SubItems[4].Text;
-                        FileInfo fi = new FileInfo(currpath);
-                        if (fi.Exists)
-                        {
-
-                            string dest = pnfd + e.Label;
-                            FileInfo t = new FileInfo(dest);
-                            if (t.Exists)
-                            {
-                                e.CancelEdit = true;
-                                listView2.Refresh();
-
-                                MessageBox.Show("Ten file da ton tai ", "error", MessageBoxButtons.OKCancel);
-
-                                listView2.FocusedItem.SubItems[0].Text = curr.SubItems[0].Text.ToString();
-                                flagRename = false;
-                            }
-
-                            else
-                            {
-                                if (e.Label == "")
-                                {
-
-                                    e.CancelEdit = true;
-                                    listView2.FocusedItem.SubItems[0].Text = curr.SubItems[0].Text.ToString();
-                                    flagRename = false;
-                                }
-                                else
-                                {
-                                    File.Move(currpath, dest);
-                                    e.CancelEdit = true;
-                                    listView2.FocusedItem.SubItems[0].Text = e.Label;
-                                    listView2.FocusedItem.SubItems[4].Text = dest;
-                                    listView2.FocusedItem.Tag = dest;
-                                    flagRename = false;
-
-
-                                }
-                            }
-
-
-                        }
-                        else
-                        {
-
-
-                            string dest = pnfd + e.Label;
-                            DirectoryInfo t = new DirectoryInfo(dest);
-                            if (t.Exists)
-                            {
-                                MessageBox.Show("Ten file da ton tai ", "error");
-                                e.CancelEdit = true;
-                                listView2.FocusedItem.SubItems[0].Text = curr.SubItems[0].Text.ToString();
-                                flagRename = false;
-                            }
-
-                            else
-                            {
-                                if (e.Label == "")
-                                {
-
-                                    e.CancelEdit = true;
-                                    listView2.FocusedItem.SubItems[0].Text = curr.SubItems[0].Text.ToString();
-                                    flagRename = false;
-
-                                }
-                                else
-                                {
-
-                                    Directory.Move(currpath, dest);
-                                    e.CancelEdit = true;
-                                    listView2.FocusedItem.SubItems[0].Text = e.Label;
-                                    listView2.FocusedItem.SubItems[4].Text = dest;
-                                    listView2.FocusedItem.Tag = dest;
-                                    flagRename = false;
-
-
-                                }
-                            }
-
-                        }
-                    }
-
-                    if (flagNewFolder)
-                    {
-
-                        ListViewItem curr = listView2.FocusedItem;
-                        string currpath = pnfd + e.Label;
                         string dest = pnfd + e.Label;
-                        DirectoryInfo t = new DirectoryInfo(dest);
-                        if (t.Exists && e.Label != "")
+                        FileInfo t = new FileInfo(dest);
+                        if (t.Exists)
                         {
-                            MessageBox.Show("Ten folder da ton tai ", "error");
                             e.CancelEdit = true;
+                            listView2.Refresh();
+
+                            MessageBox.Show("Ten file da ton tai ", "error", MessageBoxButtons.OKCancel);
+
                             listView2.FocusedItem.SubItems[0].Text = curr.SubItems[0].Text.ToString();
-                            listView2.FocusedItem.BeginEdit();
+                            flagRename = false;
                         }
 
                         else
@@ -1167,31 +1087,111 @@ namespace ĐoAn_1
                             {
 
                                 e.CancelEdit = true;
-                                string s = pnfd + curr.Text;
-                                listView2.FocusedItem.Text = curr.Text.ToString();
-                                DirectoryInfo m = Directory.CreateDirectory(s);
-                                string[] l = { m.Name, "File Folder", "", m.CreationTime.ToLongDateString(), m.FullName, m.Parent.FullName };
-                                listView2.FocusedItem = new ListViewItem(l);
-                                listView2.FocusedItem.Tag = s;
+                                listView2.FocusedItem.SubItems[0].Text = curr.SubItems[0].Text.ToString();
+                                flagRename = false;
+                            }
+                            else
+                            {
+                                File.Move(currpath, dest);
+                                e.CancelEdit = true;
+                                listView2.FocusedItem.SubItems[0].Text = e.Label;
+                                listView2.FocusedItem.SubItems[4].Text = dest;
+                                listView2.FocusedItem.Tag = dest;
+                                flagRename = false;
 
+
+                            }
+                        }
+
+
+                    }
+                    else
+                    {
+
+
+                        string dest = pnfd + e.Label;
+                        DirectoryInfo t = new DirectoryInfo(dest);
+                        if (t.Exists)
+                        {
+                            MessageBox.Show("Ten file da ton tai ", "error");
+                            e.CancelEdit = true;
+                            listView2.FocusedItem.SubItems[0].Text = curr.SubItems[0].Text.ToString();
+                            flagRename = false;
+                        }
+
+                        else
+                        {
+                            if (e.Label == "")
+                            {
+
+                                e.CancelEdit = true;
+                                listView2.FocusedItem.SubItems[0].Text = curr.SubItems[0].Text.ToString();
+                                flagRename = false;
 
                             }
                             else
                             {
+
+                                Directory.Move(currpath, dest);
                                 e.CancelEdit = true;
-                                string s = pnfd + e.Label;
-                                listView2.FocusedItem.Text = e.Label;
-                                DirectoryInfo m = Directory.CreateDirectory(s);
-                                string[] l = { m.Name, "File Folder", "", m.CreationTime.ToLongDateString(), m.FullName, m.Parent.FullName };
-                                listView2.FocusedItem = new ListViewItem(l);
-                                listView2.FocusedItem.Tag = s;
+                                listView2.FocusedItem.SubItems[0].Text = e.Label;
+                                listView2.FocusedItem.SubItems[4].Text = dest;
+                                listView2.FocusedItem.Tag = dest;
+                                flagRename = false;
+
 
                             }
                         }
 
                     }
                 }
+
+                if (flagNewFolder)
+                {
+
+                    ListViewItem curr = listView2.FocusedItem;
+                    string currpath = pnfd + e.Label;
+                    string dest = pnfd + e.Label;
+                    DirectoryInfo t = new DirectoryInfo(dest);
+                    if (t.Exists && e.Label != "")
+                    {
+                        MessageBox.Show("Ten folder da ton tai ", "error");
+                        e.CancelEdit = true;
+                        listView2.FocusedItem.SubItems[0].Text = curr.SubItems[0].Text.ToString();
+                        listView2.FocusedItem.BeginEdit();
+                    }
+
+                    else
+                    {
+                        if (e.Label == "")
+                        {
+
+                            e.CancelEdit = true;
+                            string s = pnfd + curr.Text;
+                            listView2.FocusedItem.Text = curr.Text.ToString();
+                            DirectoryInfo m = Directory.CreateDirectory(s);
+                            string[] l = { m.Name, "File Folder", "", m.CreationTime.ToLongDateString(), m.FullName, m.Parent.FullName };
+                            listView2.FocusedItem = new ListViewItem(l);
+                            listView2.FocusedItem.Tag = s;
+
+
+                        }
+                        else
+                        {
+                            e.CancelEdit = true;
+                            string s = pnfd + e.Label;
+                            listView2.FocusedItem.Text = e.Label;
+                            DirectoryInfo m = Directory.CreateDirectory(s);
+                            string[] l = { m.Name, "File Folder", "", m.CreationTime.ToLongDateString(), m.FullName, m.Parent.FullName };
+                            listView2.FocusedItem = new ListViewItem(l);
+                            listView2.FocusedItem.Tag = s;
+
+                        }
+                    }
+
+                }
             }
+
         }
 
         private void CUTToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1383,6 +1383,7 @@ namespace ĐoAn_1
             try
             {
                 string pathItem = item.SubItems[4].Text;
+
                 if (item.SubItems[1].Text == "File Folder")
                 {
                     DirectoryInfo dir = new DirectoryInfo(pathItem);
@@ -1486,7 +1487,13 @@ namespace ĐoAn_1
             }
         }
 
-        private void NEWFOLDERToolStripMenuItem2_Click(object sender, EventArgs e)
+
+        private void EDITToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Process.Start(@"‪D:\Users\Admin\Desktop\SQL.sql");
+        }
+
+        private void NEWFOLDERToolStripMenuItem1_Click_1(object sender, EventArgs e)
         {
             flagNewFolder = true;
             ListViewItem item = new ListViewItem();
@@ -1510,21 +1517,6 @@ namespace ĐoAn_1
             item.ImageKey = "folder";
             item.BeginEdit();
             nfd = "New Folder";
-        }
-
-        private void ListView2_MouseUp_1(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                if (this.listView2.SelectedItems.Count > 0)
-                {
-                    this.contextMenuStrip1.Show(listView2, e.Location);
-                }
-                else
-                {
-                    this.contextMenuStrip2.Show(listView2, e.Location);
-                }
-            }
         }
     }
 }
