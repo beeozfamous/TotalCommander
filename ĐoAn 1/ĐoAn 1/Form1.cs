@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
+
 
 namespace ĐoAn_1
 {
@@ -903,6 +905,626 @@ namespace ĐoAn_1
                 }
             }
             return nfd;
+        }
+
+        private void PASTEToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string s = "";
+            int i = 0;
+            if (listView1.Focused)
+            {
+                strDestDir = textBox1.Text;
+                s = textBox1.Text;
+                i = 1;
+            }
+
+            if (listView2.Focused)
+            {
+
+                strDestDir = textBox2.Text;
+                s = textBox2.Text;
+                i = 3;
+            }
+            Thread t = new Thread(new ThreadStart(paste));
+            t.Start();
+
+            updateListView(textBox1.Text);
+            updateListView2(textBox2.Text);
+        }
+        public string autochange(string s)
+        {
+
+            DirectoryInfo di = new DirectoryInfo(s);
+            FileInfo fi = new FileInfo(s);
+            if (di.Exists || fi.Exists)
+            {
+                i++;
+                ac = s + "_" + i.ToString();
+                autochange(ac);
+
+            }
+
+            return ac;
+
+        }
+        public void paste()
+        {
+            for (int i = 0; i < ItemName.Count; i++)
+            {
+                if (strDestDir.Length > 3)
+                {
+                    strDest = strDestDir + "\\" + ItemName[i];
+                }
+                else
+                {
+                    strDest = strDestDir + ItemName[i];
+                }
+
+                DirectoryInfo di = new DirectoryInfo(strDest);
+                FileInfo fi = new FileInfo(strDest);
+                if (di.Exists || fi.Exists)
+                {
+                    strDest = autochange(strDest);
+                    i = 0;
+                    ac = "";
+                }
+
+                try
+                {
+                    if (flagCopy[i])//copy/paste
+                    {
+
+                        if (flagDir[i])
+                        {
+                            Microsoft.VisualBasic.FileIO.UIOption a = Microsoft.VisualBasic.FileIO.UIOption.AllDialogs;
+                            Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(SourceDir[i], strDest, a);
+
+                        }
+                        else
+                        {
+                            Microsoft.VisualBasic.FileIO.UIOption a = Microsoft.VisualBasic.FileIO.UIOption.AllDialogs;
+
+                            Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(SourceFile[i], strDest, a);
+                        }
+
+
+
+                    }
+
+                    else //move/paste
+                    {
+
+                        if (flagDir[i])
+                        {
+                            Microsoft.VisualBasic.FileIO.UIOption a = Microsoft.VisualBasic.FileIO.UIOption.AllDialogs;
+                            Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory(SourceDir[i], strDest, a);
+
+                            icopy++;
+
+                        }
+                        else
+                        {
+                            Microsoft.VisualBasic.FileIO.UIOption a = Microsoft.VisualBasic.FileIO.UIOption.AllDialogs;
+                            Microsoft.VisualBasic.FileIO.FileSystem.MoveFile(SourceFile[i], strDest, a);
+                            icopy++;
+                        }
+                        //btPaste.Enabled = false;
+                        //pasteToolStripMenuItem.Enabled = false;
+                        //pasteToolStripMenuItem1.Enabled = false;
+                    }
+                }
+                catch (Exception ex) { MessageBox.Show(ex.Message); }
+
+
+
+            }
+            if (icopy > 0)
+            {
+
+                initClipboard();
+                flagCopy.Clear();
+                flagCopy.Clear();
+                SourceDir.Clear();
+                SourceFile.Clear();
+                ItemName.Clear();
+
+
+            }
+
+
+        }
+
+        private void ListView2_AfterLabelEdit(object sender, LabelEditEventArgs e)
+        {
+
+            {
+                if (e.Label == null)
+                {
+                    flagRename = false;
+                    if (flagNewFolder)
+                    {
+                        ListViewItem curr = listView2.FocusedItem;
+                        e.CancelEdit = true;
+                        string s = pnfd + curr.Text;
+                        listView2.FocusedItem.Text = curr.Text.ToString();
+                        DirectoryInfo m = Directory.CreateDirectory(s);
+                        string[] l = { m.Name, "File Folder", "", m.CreationTime.ToLongDateString(), m.FullName, m.Parent.FullName };
+                        listView2.FocusedItem = new ListViewItem(l);
+                        listView2.FocusedItem.Tag = s;
+
+                    }
+
+                    flagNewFolder = false;
+                    return;
+                }
+                else
+                {
+                    if (flagRename)
+                    {
+
+                        ListViewItem curr = listView2.SelectedItems[0];
+                        string currpath = curr.SubItems[4].Text;
+                        FileInfo fi = new FileInfo(currpath);
+                        if (fi.Exists)
+                        {
+
+                            string dest = pnfd + e.Label;
+                            FileInfo t = new FileInfo(dest);
+                            if (t.Exists)
+                            {
+                                e.CancelEdit = true;
+                                listView2.Refresh();
+
+                                MessageBox.Show("Ten file da ton tai ", "error", MessageBoxButtons.OKCancel);
+
+                                listView2.FocusedItem.SubItems[0].Text = curr.SubItems[0].Text.ToString();
+                                flagRename = false;
+                            }
+
+                            else
+                            {
+                                if (e.Label == "")
+                                {
+
+                                    e.CancelEdit = true;
+                                    listView2.FocusedItem.SubItems[0].Text = curr.SubItems[0].Text.ToString();
+                                    flagRename = false;
+                                }
+                                else
+                                {
+                                    File.Move(currpath, dest);
+                                    e.CancelEdit = true;
+                                    listView2.FocusedItem.SubItems[0].Text = e.Label;
+                                    listView2.FocusedItem.SubItems[4].Text = dest;
+                                    listView2.FocusedItem.Tag = dest;
+                                    flagRename = false;
+
+
+                                }
+                            }
+
+
+                        }
+                        else
+                        {
+
+
+                            string dest = pnfd + e.Label;
+                            DirectoryInfo t = new DirectoryInfo(dest);
+                            if (t.Exists)
+                            {
+                                MessageBox.Show("Ten file da ton tai ", "error");
+                                e.CancelEdit = true;
+                                listView2.FocusedItem.SubItems[0].Text = curr.SubItems[0].Text.ToString();
+                                flagRename = false;
+                            }
+
+                            else
+                            {
+                                if (e.Label == "")
+                                {
+
+                                    e.CancelEdit = true;
+                                    listView2.FocusedItem.SubItems[0].Text = curr.SubItems[0].Text.ToString();
+                                    flagRename = false;
+
+                                }
+                                else
+                                {
+
+                                    Directory.Move(currpath, dest);
+                                    e.CancelEdit = true;
+                                    listView2.FocusedItem.SubItems[0].Text = e.Label;
+                                    listView2.FocusedItem.SubItems[4].Text = dest;
+                                    listView2.FocusedItem.Tag = dest;
+                                    flagRename = false;
+
+
+                                }
+                            }
+
+                        }
+                    }
+
+                    if (flagNewFolder)
+                    {
+
+                        ListViewItem curr = listView2.FocusedItem;
+                        string currpath = pnfd + e.Label;
+                        string dest = pnfd + e.Label;
+                        DirectoryInfo t = new DirectoryInfo(dest);
+                        if (t.Exists && e.Label != "")
+                        {
+                            MessageBox.Show("Ten folder da ton tai ", "error");
+                            e.CancelEdit = true;
+                            listView2.FocusedItem.SubItems[0].Text = curr.SubItems[0].Text.ToString();
+                            listView2.FocusedItem.BeginEdit();
+                        }
+
+                        else
+                        {
+                            if (e.Label == "")
+                            {
+
+                                e.CancelEdit = true;
+                                string s = pnfd + curr.Text;
+                                listView2.FocusedItem.Text = curr.Text.ToString();
+                                DirectoryInfo m = Directory.CreateDirectory(s);
+                                string[] l = { m.Name, "File Folder", "", m.CreationTime.ToLongDateString(), m.FullName, m.Parent.FullName };
+                                listView2.FocusedItem = new ListViewItem(l);
+                                listView2.FocusedItem.Tag = s;
+
+
+                            }
+                            else
+                            {
+                                e.CancelEdit = true;
+                                string s = pnfd + e.Label;
+                                listView2.FocusedItem.Text = e.Label;
+                                DirectoryInfo m = Directory.CreateDirectory(s);
+                                string[] l = { m.Name, "File Folder", "", m.CreationTime.ToLongDateString(), m.FullName, m.Parent.FullName };
+                                listView2.FocusedItem = new ListViewItem(l);
+                                listView2.FocusedItem.Tag = s;
+
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        private void CUTToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            initClipboard();
+            //btPaste.Enabled = true;
+            flagCopy.Clear();
+            flagCopy.Clear();
+            SourceDir.Clear();
+            SourceFile.Clear();
+            ItemName.Clear();
+            i = 0;
+            if (listView1.Focused)
+            {
+                foreach (ListViewItem item in listView1.SelectedItems)
+                {
+                    try
+                    {
+
+                        if (listView1.SelectedItems.Count > 0)//copy o listview
+                        {
+                            listView1.FocusedItem.ForeColor = Color.LightGray;
+                            flagCopy.Add(false);
+
+                            //item = lvItem.FocusedItem;
+                            if (item.SubItems[1].Text.Trim() == "File Folder")//copy folder
+                            {
+
+
+                                flagDir.Add(true);
+                                DirectoryInfo d = new DirectoryInfo(item.SubItems[4].Text);
+                                ItemName.Add(d.Name);
+                                string ks = "";
+                                if (textBox1.Text.Length > 3)
+                                {
+                                    ks = textBox1.Text + @"\" + ItemName[ItemName.Count - 1];
+                                }
+                                else
+                                {
+                                    ks = textBox1.Text + ItemName[ItemName.Count - 1];
+                                }
+                                SourceDir.Add(ks);
+                                SourceFile.Add("");
+
+                            }
+                            else//copy file
+                            {
+                                flagCopy.Add(false);
+                                flagDir.Add(false);
+                                FileInfo d = new FileInfo(item.SubItems[4].Text);
+                                ItemName.Add(d.Name);
+                                string ks = "";
+                                if (textBox1.Text.Length > 3)
+                                {
+                                    ks = textBox1.Text + @"\" + ItemName[ItemName.Count - 1];
+                                }
+                                else
+                                {
+                                    ks = textBox1.Text + ItemName[ItemName.Count - 1];
+                                }
+                                SourceFile.Add(ks);
+                                SourceDir.Add("");
+                            }
+                            //btPaste.Enabled = true;
+                            listView1.FocusedItem = null;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Chua chon File, Folder");
+                        }
+                        // pasteToolStripMenuItem.Enabled = true;
+                        // pasteToolStripMenuItem1.Enabled = true;
+                        pASTEToolStripMenuItem.Enabled = true;
+                        pASTEToolStripMenuItem.Enabled = true;
+                        listView1.Enabled = true;
+                    }
+                    catch { }
+                }
+            }
+            else
+            {
+                foreach (ListViewItem item in listView2.SelectedItems)
+                {
+                    try
+                    {
+
+                        if (listView2.SelectedItems.Count > 0)//copy o listview
+                        {
+
+                            listView2.FocusedItem = item;
+                            listView2.FocusedItem.ForeColor = Color.LightGray;
+                            //item = lvItem2.FocusedItem;
+                            if (item.SubItems[1].Text.Trim() == "File Folder")//copy folder
+                            {
+                                flagCopy.Add(false);
+                                flagDir.Add(true);
+                                DirectoryInfo d = new DirectoryInfo(item.SubItems[4].Text);
+                                ItemName.Add(d.Name);
+                                string ks = "";
+                                if (textBox2.Text.Length > 3)
+                                {
+                                    ks = textBox2.Text + @"\" + ItemName[ItemName.Count - 1];
+                                }
+                                else
+                                {
+                                    ks = textBox2.Text + ItemName[ItemName.Count - 1];
+                                }
+                                SourceDir.Add(ks);
+                                SourceFile.Add("");
+
+                            }
+                            else//copy file
+                            {
+                                flagCopy.Add(false);
+                                flagDir.Add(false);
+                                FileInfo d = new FileInfo(item.SubItems[4].Text);
+                                ItemName.Add(d.Name);
+                                string ks = "";
+                                if (textBox2.Text.Length > 3)
+                                {
+                                    ks = textBox2.Text + @"\" + ItemName[ItemName.Count - 1];
+                                }
+                                else
+                                {
+                                    ks = textBox2.Text + ItemName[ItemName.Count - 1];
+                                }
+                                SourceFile.Add(ks);
+                                SourceDir.Add("");
+                            }
+                            //btPaste.Enabled = true;
+                            listView2.FocusedItem = null;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Chua chon File, Folder");
+                        }
+                        // pasteToolStripMenuItem.Enabled = true;
+                        // pasteToolStripMenuItem1.Enabled = true;
+
+                    }
+                    catch { }
+                }
+
+            }
+        }
+
+        private void ListView1_DoubleClick(object sender, EventArgs e)
+        {
+            lvDoubleclick(listView1.SelectedItems[0].Tag.ToString());
+        }
+        private void lvDoubleclick(string path)
+        {
+            FileInfo fi = new FileInfo(path);
+            DriveInfo d = new DriveInfo(path);
+            if (!d.IsReady)
+            {
+                MessageBox.Show("Drive isn't ready !", "Warnning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            else
+            {
+                textBox1.Text = path;
+                updateListView(path);
+            }
+        }
+
+
+        private void ListView2_DoubleClick(object sender, EventArgs e)
+        {
+            lvDoubleclick2(listView2.SelectedItems[0].Tag.ToString());
+        }
+        private void lvDoubleclick2(string path)
+        {
+            FileInfo fi = new FileInfo(path);
+            DriveInfo d = new DriveInfo(path);
+            if (!d.IsReady)
+            {
+                MessageBox.Show("Drive isn't ready !", "Warnning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            else
+            {
+                textBox2.Text = path;
+                updateListView2(path);
+            }
+        }
+        public void DeleteItem(ListViewItem item, ListView lv)
+        {
+            try
+            {
+                string pathItem = item.SubItems[4].Text;
+                if (item.SubItems[1].Text == "File Folder")
+                {
+                    DirectoryInfo dir = new DirectoryInfo(pathItem);
+                    if (!dir.Exists)
+                    {
+                        MessageBox.Show(" Drive isn't exist ");
+                        return;
+                    }
+                    else
+                    {
+
+                        dir.Delete(true);
+
+
+                    }
+
+                }
+                else
+                {
+                    FileInfo file = new FileInfo(pathItem);
+                    if (!file.Exists)
+                    {
+                        MessageBox.Show(" Drive isn't exist ");
+                        return;
+                    }
+                    else
+                    {
+
+                        file.Delete();
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("ex");
+            }
+        }
+        private void DELETEToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count == 0 && listView2.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Please select File or Folder to delete", "Error");
+            }
+
+            if (listView1.SelectedItems.Count > 0)//delete o listview
+            {
+                ListViewItem item = new ListViewItem();
+                //item = lvItem.FocusedItem;
+                DialogResult d = MessageBox.Show("Attention! Do you really want to delete ? ", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                if (d == DialogResult.Yes)
+                {
+                    foreach (ListViewItem se in listView1.SelectedItems)
+                    {
+                        DeleteItem(se, listView1);
+                        listView1.Items.Remove(se);
+                    }
+
+                }
+                else
+                {
+                    return;
+                }
+
+            }
+            if (listView2.SelectedItems.Count > 0)
+            {
+                ListViewItem item = new ListViewItem();
+                //item = lvItem.FocusedItem;
+                DialogResult d = MessageBox.Show("Attention! Do you really want to delete ? ", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                if (d == DialogResult.Yes)
+                {
+                    foreach (ListViewItem se in listView1.SelectedItems)
+                    {
+                        DeleteItem(se, listView2);
+                        listView2.Items.Remove(se);
+                    }
+
+                }
+                else
+                {
+                    return;
+                }
+            }
+        }
+
+        private void ListView1_MouseUp(object sender, MouseEventArgs e)
+        {
+
+            if (e.Button == MouseButtons.Right)
+            {
+                if (this.listView1.SelectedItems.Count > 0)
+                {
+                    this.contextMenuStrip1.Show(listView1, e.Location);
+                }
+                else
+                {
+                    this.contextMenuStrip2.Show(listView1, e.Location);
+                }
+            }
+        }
+
+        private void NEWFOLDERToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            flagNewFolder = true;
+            ListViewItem item = new ListViewItem();
+
+            if (listView1.Focused)
+            {
+                listView1.LabelEdit = true;
+                listView1.FocusedItem = item;
+                listView1.Items.Add(item);
+                pnfd = textBox1.Text;
+                item.Text = newitem();
+            }
+            if (listView2.Focused)
+            {
+                listView2.LabelEdit = true;
+                listView2.FocusedItem = item;
+                listView2.Items.Add(item);
+                pnfd = textBox2.Text;
+                item.Text = newitem();
+            }
+            item.ImageKey = "folder";
+            item.BeginEdit();
+            nfd = "New Folder";
+        }
+
+        private void ListView2_MouseUp_1(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (this.listView2.SelectedItems.Count > 0)
+                {
+                    this.contextMenuStrip1.Show(listView2, e.Location);
+                }
+                else
+                {
+                    this.contextMenuStrip2.Show(listView2, e.Location);
+                }
+            }
         }
     }
 }
