@@ -50,13 +50,6 @@
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.viewToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.eDITToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,6 +58,14 @@
             this.pASTEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dELETEToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.rENAMEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nEWFOLDERToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.listView1 = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -76,7 +77,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.nEWFOLDERToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.nEWFOLDERToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.nOTEPADToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.vISUALCODEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -157,8 +159,9 @@
             // eXITToolStripMenuItem
             // 
             this.eXITToolStripMenuItem.Name = "eXITToolStripMenuItem";
-            this.eXITToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.eXITToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.eXITToolStripMenuItem.Text = "EXIT";
+            this.eXITToolStripMenuItem.Click += new System.EventHandler(this.EXITToolStripMenuItem_Click);
             // 
             // hELPToolStripMenuItem
             // 
@@ -242,6 +245,80 @@
             // 
             this.columnHeader8.Text = "Date Modified";
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewToolStripMenuItem1,
+            this.eDITToolStripMenuItem1,
+            this.cOPYToolStripMenuItem1,
+            this.cUTToolStripMenuItem,
+            this.nEWFOLDERToolStripMenuItem1,
+            this.pASTEToolStripMenuItem,
+            this.dELETEToolStripMenuItem1,
+            this.rENAMEToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(146, 180);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip1_Opening);
+            // 
+            // viewToolStripMenuItem1
+            // 
+            this.viewToolStripMenuItem1.Name = "viewToolStripMenuItem1";
+            this.viewToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.viewToolStripMenuItem1.Text = "VIEW";
+            this.viewToolStripMenuItem1.Click += new System.EventHandler(this.ViewToolStripMenuItem1_Click);
+            // 
+            // eDITToolStripMenuItem1
+            // 
+            this.eDITToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.nOTEPADToolStripMenuItem,
+            this.vISUALCODEToolStripMenuItem});
+            this.eDITToolStripMenuItem1.Name = "eDITToolStripMenuItem1";
+            this.eDITToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.eDITToolStripMenuItem1.Text = "EDIT";
+            this.eDITToolStripMenuItem1.Click += new System.EventHandler(this.EDITToolStripMenuItem1_Click);
+            // 
+            // cOPYToolStripMenuItem1
+            // 
+            this.cOPYToolStripMenuItem1.Name = "cOPYToolStripMenuItem1";
+            this.cOPYToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.cOPYToolStripMenuItem1.Text = "COPY";
+            this.cOPYToolStripMenuItem1.Click += new System.EventHandler(this.COPYToolStripMenuItem1_Click);
+            // 
+            // cUTToolStripMenuItem
+            // 
+            this.cUTToolStripMenuItem.Name = "cUTToolStripMenuItem";
+            this.cUTToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cUTToolStripMenuItem.Text = "MOVE";
+            this.cUTToolStripMenuItem.Click += new System.EventHandler(this.CUTToolStripMenuItem_Click);
+            // 
+            // pASTEToolStripMenuItem
+            // 
+            this.pASTEToolStripMenuItem.Name = "pASTEToolStripMenuItem";
+            this.pASTEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pASTEToolStripMenuItem.Text = "PASTE";
+            this.pASTEToolStripMenuItem.Click += new System.EventHandler(this.PASTEToolStripMenuItem_Click);
+            // 
+            // dELETEToolStripMenuItem1
+            // 
+            this.dELETEToolStripMenuItem1.Name = "dELETEToolStripMenuItem1";
+            this.dELETEToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.dELETEToolStripMenuItem1.Text = "DELETE";
+            this.dELETEToolStripMenuItem1.Click += new System.EventHandler(this.DELETEToolStripMenuItem1_Click);
+            // 
+            // rENAMEToolStripMenuItem
+            // 
+            this.rENAMEToolStripMenuItem.Name = "rENAMEToolStripMenuItem";
+            this.rENAMEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.rENAMEToolStripMenuItem.Text = "RENAME";
+            this.rENAMEToolStripMenuItem.Click += new System.EventHandler(this.RENAMEToolStripMenuItem_Click);
+            // 
+            // nEWFOLDERToolStripMenuItem1
+            // 
+            this.nEWFOLDERToolStripMenuItem1.Name = "nEWFOLDERToolStripMenuItem1";
+            this.nEWFOLDERToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.nEWFOLDERToolStripMenuItem1.Text = "NEW FOLDER";
+            this.nEWFOLDERToolStripMenuItem1.Click += new System.EventHandler(this.NEWFOLDERToolStripMenuItem1_Click_1);
+            // 
             // textBox2
             // 
             this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -307,70 +384,6 @@
             // columnHeader7
             // 
             this.columnHeader7.Text = "Date Modified";
-            // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.viewToolStripMenuItem1,
-            this.eDITToolStripMenuItem1,
-            this.cOPYToolStripMenuItem1,
-            this.cUTToolStripMenuItem,
-            this.pASTEToolStripMenuItem,
-            this.dELETEToolStripMenuItem1,
-            this.rENAMEToolStripMenuItem,
-            this.nEWFOLDERToolStripMenuItem1});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 202);
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip1_Opening);
-            // 
-            // viewToolStripMenuItem1
-            // 
-            this.viewToolStripMenuItem1.Name = "viewToolStripMenuItem1";
-            this.viewToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.viewToolStripMenuItem1.Text = "VIEW";
-            this.viewToolStripMenuItem1.Click += new System.EventHandler(this.ViewToolStripMenuItem1_Click);
-            // 
-            // eDITToolStripMenuItem1
-            // 
-            this.eDITToolStripMenuItem1.Name = "eDITToolStripMenuItem1";
-            this.eDITToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.eDITToolStripMenuItem1.Text = "EDIT";
-            this.eDITToolStripMenuItem1.Click += new System.EventHandler(this.EDITToolStripMenuItem1_Click);
-            // 
-            // cOPYToolStripMenuItem1
-            // 
-            this.cOPYToolStripMenuItem1.Name = "cOPYToolStripMenuItem1";
-            this.cOPYToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.cOPYToolStripMenuItem1.Text = "COPY";
-            this.cOPYToolStripMenuItem1.Click += new System.EventHandler(this.COPYToolStripMenuItem1_Click);
-            // 
-            // cUTToolStripMenuItem
-            // 
-            this.cUTToolStripMenuItem.Name = "cUTToolStripMenuItem";
-            this.cUTToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.cUTToolStripMenuItem.Text = "MOVE";
-            this.cUTToolStripMenuItem.Click += new System.EventHandler(this.CUTToolStripMenuItem_Click);
-            // 
-            // pASTEToolStripMenuItem
-            // 
-            this.pASTEToolStripMenuItem.Name = "pASTEToolStripMenuItem";
-            this.pASTEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.pASTEToolStripMenuItem.Text = "PASTE";
-            this.pASTEToolStripMenuItem.Click += new System.EventHandler(this.PASTEToolStripMenuItem_Click);
-            // 
-            // dELETEToolStripMenuItem1
-            // 
-            this.dELETEToolStripMenuItem1.Name = "dELETEToolStripMenuItem1";
-            this.dELETEToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.dELETEToolStripMenuItem1.Text = "DELETE";
-            this.dELETEToolStripMenuItem1.Click += new System.EventHandler(this.DELETEToolStripMenuItem1_Click);
-            // 
-            // rENAMEToolStripMenuItem
-            // 
-            this.rENAMEToolStripMenuItem.Name = "rENAMEToolStripMenuItem";
-            this.rENAMEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.rENAMEToolStripMenuItem.Text = "RENAME";
-            this.rENAMEToolStripMenuItem.Click += new System.EventHandler(this.RENAMEToolStripMenuItem_Click);
             // 
             // comboBox1
             // 
@@ -478,12 +491,19 @@
             this.nEWFOLDERToolStripMenuItem2.Size = new System.Drawing.Size(145, 22);
             this.nEWFOLDERToolStripMenuItem2.Text = "NEW FOLDER";
             // 
-            // nEWFOLDERToolStripMenuItem1
+            // nOTEPADToolStripMenuItem
             // 
-            this.nEWFOLDERToolStripMenuItem1.Name = "nEWFOLDERToolStripMenuItem1";
-            this.nEWFOLDERToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.nEWFOLDERToolStripMenuItem1.Text = "NEW FOLDER";
-            this.nEWFOLDERToolStripMenuItem1.Click += new System.EventHandler(this.NEWFOLDERToolStripMenuItem1_Click_1);
+            this.nOTEPADToolStripMenuItem.Name = "nOTEPADToolStripMenuItem";
+            this.nOTEPADToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.nOTEPADToolStripMenuItem.Text = "NOTEPAD";
+            this.nOTEPADToolStripMenuItem.Click += new System.EventHandler(this.NOTEPADToolStripMenuItem_Click);
+            // 
+            // vISUALCODEToolStripMenuItem
+            // 
+            this.vISUALCODEToolStripMenuItem.Name = "vISUALCODEToolStripMenuItem";
+            this.vISUALCODEToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.vISUALCODEToolStripMenuItem.Text = "VISUALCODE";
+            this.vISUALCODEToolStripMenuItem.Click += new System.EventHandler(this.VISUALCODEToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -564,6 +584,8 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.ToolStripMenuItem nEWFOLDERToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem nEWFOLDERToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem nOTEPADToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem vISUALCODEToolStripMenuItem;
     }
 }
 

@@ -28,6 +28,7 @@ namespace ĐoAn_1
         public static int i = 0;
         public static string ac = "";
         public static string savechange = "";
+        public static ListViewItem itp;
 
 
         public Form1()
@@ -166,10 +167,85 @@ namespace ĐoAn_1
         {
 
         }
+        private void ViewItem(ListViewItem item) {
+            try
+            {
+                string pathItem = item.SubItems[4].Text;
 
+                if (item.SubItems[1].Text == "File Folder")
+                {
+                    DirectoryInfo dir = new DirectoryInfo(pathItem);
+                    if (!dir.Exists)
+                    {
+                        MessageBox.Show(" Drive isn't exist ");
+                        return;
+                    }
+                    else
+                    {
+
+                       
+
+
+                    }
+
+                }
+                else
+                {
+                    FileInfo file = new FileInfo(pathItem);
+                    if (!file.Exists)
+                    {
+                        MessageBox.Show(" Drive isn't exist ");
+                        return;
+                    }
+                    else
+                    {
+
+                        Form_View f = new Form_View(pathItem);
+                        f.ShowDialog();
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("error");
+            }
+        }
         private void ViewToolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            if (listView1.SelectedItems.Count == 0 && listView2.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Please select File or Folder to delete", "Error");
+            }
 
+            if (listView1.SelectedItems.Count > 0)//delete o listview
+            {
+                ListViewItem item = new ListViewItem();
+                //item = lvItem.FocusedItem;
+
+                foreach (ListViewItem se in listView1.SelectedItems)
+                {
+                    ViewItem(se);
+                    //listView1.Items.Remove(se);
+                }
+
+                return;
+
+            }
+            if (listView2.SelectedItems.Count > 0)
+            {
+                ListViewItem item = new ListViewItem();
+                //item = lvItem.FocusedItem;
+
+                foreach (ListViewItem se in listView1.SelectedItems)
+                {
+                    ViewItem(se);
+                    //listView2.Items.Remove(se);
+                }
+
+                return;
+            }
         }
 
         private void ToolStripButton1_Click(object sender, EventArgs e)
@@ -530,6 +606,8 @@ namespace ĐoAn_1
 
             if (listView1.Focused)
             {
+                DialogResult dx = MessageBox.Show("Attention! Do you really want to copy ? ", "Copy", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                if (dx == DialogResult.No) return;
                 if (listView1.SelectedItems.Count == 0)
                 {
                     MessageBox.Show("Chua chon File, Folder");
@@ -1204,7 +1282,9 @@ namespace ĐoAn_1
             SourceFile.Clear();
             ItemName.Clear();
             i = 0;
-            if (listView1.Focused)
+            DialogResult dx = MessageBox.Show("Attention! Do you really want to move ? ", "Move", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+            if (dx == DialogResult.No) return;
+                if (listView1.Focused)
             {
                 foreach (ListViewItem item in listView1.SelectedItems)
                 {
@@ -1487,10 +1567,87 @@ namespace ĐoAn_1
             }
         }
 
+        private void EditItem(ListViewItem item,string type)
+        {
+            try
+            {
+                string pathItem = item.SubItems[4].Text;
 
+                if (item.SubItems[1].Text == "File Folder")
+                {
+                    DirectoryInfo dir = new DirectoryInfo(pathItem);
+                    if (!dir.Exists)
+                    {
+                        MessageBox.Show(" Drive isn't exist ");
+                        return;
+                    }
+                    else
+                    {
+
+
+
+
+                    }
+
+                }
+                else
+                {
+                    FileInfo file = new FileInfo(pathItem);
+                    if (!file.Exists)
+                    {
+                        MessageBox.Show(" Drive isn't exist ");
+                        return;
+                    }
+                    else
+                    {
+                        if(type.Equals("vs"))
+                            Process.Start("D:/Users/Admin/AppData/Local/Programs/Microsoft VS Code/Code.exe", pathItem);
+                        else
+                            Process.Start("notepad.exe", pathItem);
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("ex");
+            }
+        }
         private void EDITToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            Process.Start(@"‪D:\Users\Admin\Desktop\SQL.sql");
+            if (listView1.SelectedItems.Count == 0 && listView2.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Please select File or Folder to delete", "Error");
+            }
+
+            if (listView1.SelectedItems.Count > 0)//delete o listview
+            {
+                ListViewItem item = new ListViewItem();
+                //item = lvItem.FocusedItem;
+
+                foreach (ListViewItem se in listView1.SelectedItems)
+                {
+                    EditItem(se,"");
+                    //listView1.Items.Remove(se);
+                }
+
+
+
+            }
+            if (listView2.SelectedItems.Count > 0)
+            {
+                ListViewItem item = new ListViewItem();
+                //item = lvItem.FocusedItem;
+
+                foreach (ListViewItem se in listView1.SelectedItems)
+                {
+                    EditItem(se,"");
+                    //listView2.Items.Remove(se);
+                }
+
+
+            }
         }
 
         private void NEWFOLDERToolStripMenuItem1_Click_1(object sender, EventArgs e)
@@ -1517,6 +1674,83 @@ namespace ĐoAn_1
             item.ImageKey = "folder";
             item.BeginEdit();
             nfd = "New Folder";
+        }
+
+        private void NOTEPADToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count == 0 && listView2.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Please select File or Folder to delete", "Error");
+            }
+
+            if (listView1.SelectedItems.Count > 0)//delete o listview
+            {
+                ListViewItem item = new ListViewItem();
+                //item = lvItem.FocusedItem;
+
+                foreach (ListViewItem se in listView1.SelectedItems)
+                {
+                    EditItem(se,"");
+                    //listView1.Items.Remove(se);
+                }
+
+
+
+            }
+            if (listView2.SelectedItems.Count > 0)
+            {
+                ListViewItem item = new ListViewItem();
+                //item = lvItem.FocusedItem;
+
+                foreach (ListViewItem se in listView1.SelectedItems)
+                {
+                    EditItem(se,"");
+                    //listView2.Items.Remove(se);
+                }
+
+
+            }
+        }
+
+        private void VISUALCODEToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count == 0 && listView2.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Please select File or Folder to delete", "Error");
+            }
+
+            if (listView1.SelectedItems.Count > 0)//delete o listview
+            {
+                ListViewItem item = new ListViewItem();
+                //item = lvItem.FocusedItem;
+
+                foreach (ListViewItem se in listView1.SelectedItems)
+                {
+                    EditItem(se,"vs");
+                    //listView1.Items.Remove(se);
+                }
+
+
+
+            }
+            if (listView2.SelectedItems.Count > 0)
+            {
+                ListViewItem item = new ListViewItem();
+                //item = lvItem.FocusedItem;
+
+                foreach (ListViewItem se in listView1.SelectedItems)
+                {
+                    EditItem(se,"vs");
+                    //listView2.Items.Remove(se);
+                }
+
+
+            }
+        }
+
+        private void EXITToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

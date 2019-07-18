@@ -8,3 +8,5 @@ D:\Users\Admin\Desktop\c4w-17clc2-1753077\PROJECT 1\ĐoAn 1\ĐoAn 1\obj\Debug\Đ
 D:\Users\Admin\Desktop\c4w-17clc2-1753077\PROJECT 1\ĐoAn 1\ĐoAn 1\obj\Debug\ĐoAn 1.csproj.CoreCompileInputs.cache
 D:\Users\Admin\Desktop\c4w-17clc2-1753077\PROJECT 1\ĐoAn 1\ĐoAn 1\obj\Debug\ĐoAn 1.exe
 D:\Users\Admin\Desktop\c4w-17clc2-1753077\PROJECT 1\ĐoAn 1\ĐoAn 1\obj\Debug\ĐoAn 1.pdb
+D:\Users\Admin\Desktop\c4w-17clc2-1753077\PROJECT 1\ĐoAn 1\ĐoAn 1\obj\Debug\ĐoAn_1.Form_View.resources
+D:\Users\Admin\Desktop\c4w-17clc2-1753077\PROJECT 1\ĐoAn 1\ĐoAn 1\obj\Debug\ĐoAn_1.Form_About.resources
